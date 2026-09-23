@@ -1,0 +1,32 @@
+{
+  "source": "Philippine Statistics Authority (PSA) / GeoRiskPH",
+  "license": "Publicly available Philippine spatial data; verify current agency terms before redistribution",
+  "license_url": "https://ulap-nga.georisk.gov.ph/",
+  "endpoint": "https://ulap-nga.georisk.gov.ph/arcgis/rest/services/PSA/BarangayPopMF/MapServer/0/query",
+  "retrieved_at": "2026-09-23",
+  "boundary_source": {
+    "name": "PSA Barangay Population Map Feature Service",
+    "query": "city_name LIKE '%Butuan%'",
+    "source_url": "https://ulap-nga.georisk.gov.ph/arcgis/rest/services/PSA/BarangayPopMF/MapServer/0/query",
+    "geometry_crs": "EPSG:4326",
+    "source_identifier": "psa_barangay/<brgy_code>"
+  },
+  "legacy_sources": {
+    "source": "OpenStreetMap contributors",
+    "license": "ODbL 1.0",
+    "license_url": "https://www.openstreetmap.org/copyright",
+    "endpoint": "https://overpass-api.de/api/interpreter"
+  },
+  "queries": {
+    "city": "[out:json][timeout:120];rel(14141553);out geom;",
+    "facilities": "[out:json][timeout:120];nwr[amenity~\"^(hospital|fire_station|police)$\"](8.7438542,125.4423327,9.0559447,125.7356281);out center tags;",
+    "barangays": "[out:json][timeout:120];area[boundary=administrative][name=Butuan]->.a;rel(area.a)[boundary=administrative][admin_level=10];out geom;"
+  },
+  "limitations": [
+    "Volunteer-mapped data may be incomplete or out of date.",
+    "Facility operating status is not independently confirmed; Active is an application inclusion status.",
+    "OSM way/relation facilities use returned bounding-box centers, not surveyed entrances.",
+    "Barangay coverage is limited to the PSA/GeoRisk features returned for Butuan City; missing areas are not inferred.",
+    "No evacuation centers or hazard polygons have been fabricated."
+  ]
+}

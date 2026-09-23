@@ -1,0 +1,20 @@
+# Optional HTTPS front door. Supply a domain pointing to this server.
+# Run together with compose.yaml; set SESSION_COOKIE_SECURE=true.
+services:
+  gateway:
+    image: caddy:2
+    environment:
+      RESQGIS_DOMAIN: ${RESQGIS_DOMAIN:?Set the public domain}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - web
+    restart: unless-stopped
+volumes:
+  caddy_data:
+  caddy_config:

@@ -1,0 +1,36 @@
+services:
+  db:
+    image: postgis/postgis:17-3.5
+    environment:
+      POSTGRES_DB: resqgis
+      POSTGRES_USER: resqgis
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in .env}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U resqgis -d resqgis"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+  web:
+    build: .
+    environment:
+      DATABASE_URL: postgresql://resqgis:${DB_PASSWORD}@db:5432/resqgis
+      SECRET_KEY: ${SECRET_KEY:?Set SECRET_KEY in .env}
+      SESSION_COOKIE_SECURE: ${SESSION_COOKIE_SECURE:-false}
+      GOOGLE_MAPS_API_KEY: ${GOOGLE_MAPS_API_KEY:-}
+      GOOGLE_MAP_ID: ${GOOGLE_MAP_ID:-DEMO_MAP_ID}
+      GEOSERVER_WMS_URL: ${GEOSERVER_WMS_URL:-}
+      GEOSERVER_LAYER: ${GEOSERVER_LAYER:-}
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - appdata:/app/instance
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+volumes:
+  pgdata:
+  appdata:

@@ -1,0 +1,36 @@
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.pyo
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Local databases / backups
+*.sqlite
+*.sqlite3
+*.sql
+*.dump
+*.backup
+
+# Temporary files
+*.tmp
+*.temp
+
+# Flask instance data / uploads
+instance/
