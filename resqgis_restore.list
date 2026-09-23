@@ -1,0 +1,67 @@
+;
+; Archive created at 2026-09-23 14:29:19
+;     dbname: resqgis
+;     TOC Entries: 60
+;     Compression: gzip
+;     Dump Version: 1.16-0
+;     Format: CUSTOM
+;     Integer: 4 bytes
+;     Offset: 8 bytes
+;     Dumped from database version: 18.6
+;     Dumped by pg_dump version: 18.6
+;
+;
+; Selected TOC Entries:
+;
+236; 1259 17999 TABLE public audit_log resqgis
+235; 1259 17998 SEQUENCE public audit_log_id_seq resqgis
+6027; 0 0 SEQUENCE OWNED BY public audit_log_id_seq resqgis
+228; 1259 17886 TABLE public boundaries resqgis
+227; 1259 17885 SEQUENCE public boundaries_id_seq resqgis
+6028; 0 0 SEQUENCE OWNED BY public boundaries_id_seq resqgis
+230; 1259 17905 TABLE public facilities resqgis
+229; 1259 17904 SEQUENCE public facilities_id_seq resqgis
+6029; 0 0 SEQUENCE OWNED BY public facilities_id_seq resqgis
+231; 1259 17942 TABLE public facility_source_aliases resqgis
+233; 1259 17959 TABLE public incident_reports resqgis
+232; 1259 17958 SEQUENCE public incident_reports_id_seq resqgis
+6030; 0 0 SEQUENCE OWNED BY public incident_reports_id_seq resqgis
+234; 1259 17986 TABLE public rate_limits resqgis
+226; 1259 17867 TABLE public users resqgis
+225; 1259 17866 SEQUENCE public users_id_seq resqgis
+6031; 0 0 SEQUENCE OWNED BY public users_id_seq resqgis
+5815; 2604 18002 DEFAULT public audit_log id resqgis
+5800; 2604 17889 DEFAULT public boundaries id resqgis
+5801; 2604 17908 DEFAULT public facilities id resqgis
+5809; 2604 17962 DEFAULT public incident_reports id resqgis
+5797; 2604 17870 DEFAULT public users id resqgis
+6018; 0 17999 TABLE DATA public audit_log resqgis
+6010; 0 17886 TABLE DATA public boundaries resqgis
+6012; 0 17905 TABLE DATA public facilities resqgis
+6013; 0 17942 TABLE DATA public facility_source_aliases resqgis
+6015; 0 17959 TABLE DATA public incident_reports resqgis
+6016; 0 17986 TABLE DATA public rate_limits resqgis
+6008; 0 17867 TABLE DATA public users resqgis
+6032; 0 0 SEQUENCE SET public audit_log_id_seq resqgis
+6033; 0 0 SEQUENCE SET public boundaries_id_seq resqgis
+6034; 0 0 SEQUENCE SET public facilities_id_seq resqgis
+6035; 0 0 SEQUENCE SET public incident_reports_id_seq resqgis
+6036; 0 0 SEQUENCE SET public users_id_seq resqgis
+5850; 2606 18010 CONSTRAINT public audit_log audit_log_pkey resqgis
+5833; 2606 17900 CONSTRAINT public boundaries boundaries_pkey resqgis
+5835; 2606 17902 CONSTRAINT public boundaries boundaries_source_id_key resqgis
+5839; 2606 17932 CONSTRAINT public facilities facilities_pkey resqgis
+5841; 2606 17934 CONSTRAINT public facilities facilities_source_id_key resqgis
+5843; 2606 17952 CONSTRAINT public facility_source_aliases facility_source_aliases_pkey resqgis
+5845; 2606 17979 CONSTRAINT public incident_reports incident_reports_pkey resqgis
+5848; 2606 17997 CONSTRAINT public rate_limits rate_limits_pkey resqgis
+5828; 2606 17882 CONSTRAINT public users users_pkey resqgis
+5830; 2606 17884 CONSTRAINT public users users_username_key resqgis
+5831; 1259 17903 INDEX public boundaries_geom_idx resqgis
+5836; 1259 17941 INDEX public facilities_geog_idx resqgis
+5837; 1259 17940 INDEX public facilities_geom_idx resqgis
+5846; 1259 17985 INDEX public reports_geom_idx resqgis
+5854; 2606 18011 FK CONSTRAINT public audit_log audit_log_user_id_fkey resqgis
+5851; 2606 17935 FK CONSTRAINT public facilities facilities_barangay_id_fkey resqgis
+5852; 2606 17953 FK CONSTRAINT public facility_source_aliases facility_source_aliases_facility_id_fkey resqgis
+5853; 2606 17980 FK CONSTRAINT public incident_reports incident_reports_barangay_id_fkey resqgis
