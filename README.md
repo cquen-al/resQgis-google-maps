@@ -56,24 +56,6 @@ The project contains a small Leaflet-compatible interface in `static/google-map.
 
 ## Data sources and accuracy
 
-### Facility verification and data quality
-
-Facility records are not considered authoritative merely because they appear in
-Google Places, OpenStreetMap, or another map provider. Each facility has a
-separate `verification_status` with one of `VERIFIED`,
-`NEEDS_VERIFICATION`, or `INACTIVE`, plus the authoritative source name, source
-URL, and `last_verified` date. Existing facilities are conservatively
-initialized as `NEEDS_VERIFICATION`; no facility is deleted or automatically
-promoted to `VERIFIED`.
-
-The public facility map and all three spatial analyses (Nearest Facility,
-Service Coverage, and Barangay Accessibility) require both
-`verification_status='VERIFIED'` and `status='active'`. Administrators can
-review all facility records and record evidence from appropriate sources such
-as DOH/official health registries, BFP, PNP, Butuan City government, CDRRMO,
-OCD, or DSWD. Google Places remains discovery/source metadata, not proof of
-government legitimacy or current operation.
-
 ### Facilities
 
 Public facility records are selected from:
