@@ -345,6 +345,9 @@ const selectionLayer =
     L.layerGroup().addTo(map);
 
 let wmsLayer = null;
+let analysisAddedBarangayLayer = false;
+let barangayLayerWasVisibleBeforeAnalysis = false;
+let barangayCheckboxWasCheckedBeforeAnalysis = false;
 
 function accessibilityPopupHtml(
     row,
@@ -2197,6 +2200,33 @@ if (clearAnalysis) {
             selectionLayer
                 .clearLayers();
 
+            // Accessibility temporarily enables the normal barangay layer
+            // so its outlines remain visible under the analysis polygons.
+            // Remove it only when the user did not have it enabled before
+            // running the analysis.
+            if (
+                analysisAddedBarangayLayer &&
+                !barangayLayerWasVisibleBeforeAnalysis
+            ) {
+                map.removeLayer(
+                    barangayLayer
+                );
+            }
+
+            const barangayCheckbox =
+                $('#layer-barangays');
+
+            if (
+                barangayCheckbox &&
+                !barangayCheckboxWasCheckedBeforeAnalysis
+            ) {
+                barangayCheckbox.checked = false;
+            }
+
+            analysisAddedBarangayLayer = false;
+            barangayLayerWasVisibleBeforeAnalysis = false;
+            barangayCheckboxWasCheckedBeforeAnalysis = false;
+
             const accessibilityLegend =
                 $('#accessibility-legend');
 
@@ -2682,16 +2712,30 @@ if (runAnalysis) {
                             )
                             .join('');
 
-                    map.addLayer(
-                        barangayLayer
-                    );
-
                     const checkbox =
                         $('#layer-barangays');
 
-                    if (checkbox) {
-                        checkbox.checked =
+                    const layerWasVisible =
+                        barangayLayer.map ===
+                        map.native;
+
+                    if (!layerWasVisible) {
+                        barangayLayerWasVisibleBeforeAnalysis =
+                            false;
+                        analysisAddedBarangayLayer =
                             true;
+                        map.addLayer(
+                            barangayLayer
+                        );
+                    } else {
+                        barangayLayerWasVisibleBeforeAnalysis =
+                            true;
+                    }
+
+                    if (checkbox) {
+                        barangayCheckboxWasCheckedBeforeAnalysis =
+                            checkbox.checked;
+                        checkbox.checked = true;
                     }
                 }
 
