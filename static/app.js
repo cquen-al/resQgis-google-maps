@@ -1863,9 +1863,6 @@ function startPick(type) {
         facilityDialog.close();
     }
 
-    toast(
-        'Click the actual location on the map.'
-    );
 }
 
 
