@@ -1011,9 +1011,6 @@ async function loadFacilities() {
     const barangay =
         $('#barangay-filter');
 
-    const status =
-        $('#status-filter');
-
     const params =
         new URLSearchParams({
             q:
@@ -1029,10 +1026,6 @@ async function loadFacilities() {
                     ? barangay.value
                     : '',
 
-            status:
-                status
-                    ? status.value
-                    : ''
         });
 
     try {
@@ -1224,9 +1217,6 @@ async function loadFacilities() {
     const barangay =
         $('#barangay-filter');
 
-    const status =
-        $('#status-filter');
-
     const params =
         new URLSearchParams({
             q:
@@ -1242,10 +1232,6 @@ async function loadFacilities() {
                     ? barangay.value
                     : '',
 
-            status:
-                status
-                    ? status.value
-                    : ''
         });
 
     try {
@@ -1561,15 +1547,6 @@ const barangayFilter =
 
 if (barangayFilter) {
     barangayFilter.onchange =
-        loadFacilities;
-}
-
-
-const statusFilter =
-    $('#status-filter');
-
-if (statusFilter) {
-    statusFilter.onchange =
         loadFacilities;
 }
 
