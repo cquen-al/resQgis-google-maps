@@ -10,6 +10,7 @@ import secrets
 import time
 
 import click
+import datetime
 from flask import (
     Flask,
     abort,
@@ -571,6 +572,10 @@ def create_app(test_config=None):
             f.address,
             f.contact_number,
             f.status,
+            f.verification_status,
+            f.verification_source_name,
+            f.verification_source_url,
+            f.last_verified,
             f.barangay_id,
             b.name AS barangay,
             f.source_url,
@@ -843,6 +848,12 @@ def create_app(test_config=None):
             "f.facility_type IN ('hospital','fire_station','police')",
             "(LEFT(f.source_id, 7)='google:' OR f.source_id IS NULL)"
         ]
+        admin_view = (
+            request.args.get('admin') == '1' and
+            bool(session.get('user_id'))
+        )
+        if not admin_view:
+            conditions.append("f.verification_status='VERIFIED'")
         params = []
 
         if request.args.get('q'):
@@ -1025,6 +1036,38 @@ def create_app(test_config=None):
             100
         )
 
+        verification_status = choice(
+            data,
+            'verification_status',
+            {
+                'VERIFIED',
+                'NEEDS_VERIFICATION',
+                'INACTIVE'
+            },
+            'NEEDS_VERIFICATION'
+        )
+
+        verification_source_name = text(
+            data,
+            'verification_source_name',
+            0,
+            300
+        )
+
+        verification_source_url = text(
+            data,
+            'verification_source_url',
+            0,
+            1000
+        )
+
+        last_verified = data.get('last_verified') or None
+        if last_verified:
+            try:
+                datetime.date.fromisoformat(last_verified)
+            except (TypeError, ValueError):
+                abort(400, description='Invalid last verified date.')
+
         lon, lat, barangay, _ = (
             location(data)
         )
@@ -1035,6 +1078,10 @@ def create_app(test_config=None):
             address,
             contact,
             status,
+            verification_status,
+            verification_source_name,
+            verification_source_url,
+            last_verified,
             barangay['id']
             if barangay
             else None,
@@ -1065,11 +1112,15 @@ def create_app(test_config=None):
                 address,
                 contact_number,
                 status,
+                verification_status,
+                verification_source_name,
+                verification_source_url,
+                last_verified,
                 barangay_id,
                 geom
             )
             VALUES(
-                %s,%s,%s,%s,%s,%s,
+                %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,
                 ST_SetSRID(
                     ST_MakePoint(%s,%s),
                     4326
@@ -1114,6 +1165,10 @@ def create_app(test_config=None):
                 address=%s,
                 contact_number=%s,
                 status=%s,
+                verification_status=%s,
+                verification_source_name=%s,
+                verification_source_url=%s,
+                last_verified=%s,
                 barangay_id=%s,
 
                 geom=ST_SetSRID(
@@ -1574,6 +1629,19 @@ def create_app(test_config=None):
                 FROM incident_reports
                 GROUP BY status
                 '''
+            ),
+
+            verification=rows(
+                '''
+                SELECT
+                    verification_status,
+                    count(*)::int AS count
+                FROM facilities
+                WHERE
+                    facility_type IN
+                    ('hospital','fire_station','police')
+                GROUP BY verification_status
+                '''
             )
         )
 
@@ -1640,6 +1708,7 @@ def create_app(test_config=None):
             WHERE
                 f.facility_type=%s
                 AND f.status=ANY(%s)
+                AND f.verification_status='VERIFIED'
                 AND (
                     LEFT(f.source_id, 7)='google:'
                     OR f.source_id IS NULL
@@ -1787,6 +1856,7 @@ def create_app(test_config=None):
                     WHERE
                         (%s='all' OR facility_type=%s)
                         AND status=ANY(%s)
+                        AND verification_status='VERIFIED'
                         AND (
                             LEFT(source_id, 7)='google:'
                             OR source_id IS NULL
@@ -1878,6 +1948,7 @@ def create_app(test_config=None):
                 WHERE
                     (%s='all' OR f.facility_type=%s)
                     AND f.status=ANY(%s)
+                    AND f.verification_status='VERIFIED'
                     AND (
                         LEFT(f.source_id, 7)='google:'
                         OR f.source_id IS NULL

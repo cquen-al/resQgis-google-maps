@@ -3106,6 +3106,24 @@ function renderAdminFacilities() {
                             </td>
 
                             <td>
+                                <span class="status ${escapeHTML(
+                                    p.verification_status
+                                )}">
+                                    ${escapeHTML(
+                                        p.verification_status
+                                            .replaceAll('_', ' ')
+                                    )}
+                                </span>
+                                ${
+                                    p.verification_source_name
+                                        ? `<small>${escapeHTML(
+                                            p.verification_source_name
+                                        )}</small>`
+                                        : ''
+                                }
+                            </td>
+
+                            <td>
                                 ${statusBadge(
                                     p.status
                                 )}
@@ -3142,7 +3160,7 @@ function renderAdminFacilities() {
         ||
         `
             <tr>
-                <td colspan="4">
+                <td colspan="5">
                     No facilities match.
                 </td>
             </tr>
@@ -3284,7 +3302,7 @@ async function openAdmin() {
             ),
 
             api(
-                '/api/facilities'
+                '/api/facilities?admin=1'
             ),
 
             api(
@@ -3318,11 +3336,32 @@ async function openAdmin() {
 
         if (adminStats) {
 
+            const verificationCount =
+                status =>
+                    stats.verification
+                        .find(
+                            row =>
+                                row.verification_status ===
+                                status
+                        )
+                        ?.count
+                    || 0;
+
             adminStats.innerHTML =
                 [
                     [
                         facilityTotal,
                         'Facilities'
+                    ],
+
+                    [
+                        verificationCount('VERIFIED'),
+                        'Verified facilities'
+                    ],
+
+                    [
+                        verificationCount('NEEDS_VERIFICATION'),
+                        'Needs verification'
                     ],
 
                     [
@@ -3665,6 +3704,10 @@ function editFacility(
             'name',
             'facility_type',
             'status',
+            'verification_status',
+            'verification_source_name',
+            'verification_source_url',
+            'last_verified',
             'address',
             'contact_number'
         ].forEach(
