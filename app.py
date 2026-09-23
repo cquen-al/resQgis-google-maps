@@ -2168,12 +2168,17 @@ def create_app(test_config=None):
 # RUN DIRECTLY
 # ============================================================
 
+# Create the Flask application.
+# Vercel needs a top-level variable named "app".
+app = create_app()
+
+
 if __name__ == '__main__':
 
     from waitress import serve
 
     serve(
-        create_app(),
+        app,
         host='127.0.0.1',
         port=int(
             os.environ.get(
